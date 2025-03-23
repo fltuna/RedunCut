@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Resources\UrlResource;
 use App\Models\Url;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -19,7 +20,9 @@ class UrlController extends Controller
      */
     public function index()
     {
-        return response()->json([]);
+        return response()->json([
+            'where' => 'api index',
+        ]);
     }
 
     /**
@@ -70,7 +73,9 @@ class UrlController extends Controller
      */
     public function show(string $id)
     {
-        return response()->json([]);
+        $url = Url::findOrFail($id);
+
+        return response()->json(new UrlResource($url));
     }
 
     /**
