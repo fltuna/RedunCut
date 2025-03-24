@@ -73,7 +73,10 @@ class UrlController extends Controller
      */
     public function show(string $id)
     {
-        $url = Url::findOrFail($id);
+        $url = Url::find($id);
+
+        if(!isset($url))
+            return self::return404();
 
         return response()->json(new UrlResource($url));
     }
@@ -83,7 +86,27 @@ class UrlController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        return response()->json([]);
+        $url = Url::find($id);
+
+        if(!isset($url))
+            return self::return404();
+
+
+        $validated = $request->validate([
+            'original_url' => 'nullable|url',
+            'custom_alias' => 'nullable|alpha_dash'
+        ]);
+
+        $url->fill($validated);
+
+        if($url->save())
+        {
+            return response()->json(new UrlResource($url));
+        }
+        else
+        {
+            return self::return500('Failed to update');
+        }
     }
 
     /**
