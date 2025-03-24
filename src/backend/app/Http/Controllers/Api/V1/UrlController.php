@@ -33,7 +33,7 @@ class UrlController extends Controller
         try{
             $validated = $request->validate([
                 'original_url' => 'required|url',
-                'custom_alias' => 'nullable|alpha_dash'
+                'short_code' => 'nullable|alpha_dash|min:3|max:50|unique:urls,short_code'
             ]);
 
 
@@ -41,14 +41,7 @@ class UrlController extends Controller
             $url->original_url = $validated['original_url'];
 
 
-            if(!empty($validated['custom_alias']))
-            {
-                $url->short_code = $validated['custom_alias'];
-            }
-            else
-            {
-                $url->short_code = $this->generateUniqueShortCode();
-            }
+            $url->short_code = $validated['short_code'] ?? $this->generateUniqueShortCode();
 
             $url->user_id = self::USER_ID_FOR_TEST_BEFORE_AUTH_IMPLEMENTED;
             $url->save();
@@ -94,7 +87,7 @@ class UrlController extends Controller
 
         $validated = $request->validate([
             'original_url' => 'nullable|url',
-            'custom_alias' => 'nullable|alpha_dash'
+            'short_code' => 'nullable|alpha_dash'
         ]);
 
         $url->fill($validated);

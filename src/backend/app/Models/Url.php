@@ -46,7 +46,6 @@ class Url extends Model
         'user_id',
         'original_url',
         'short_code',
-        'custom_alias',
         'expires_at'
     ];
 

@@ -18,11 +18,12 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable();
             $table->string('original_url');
             $table->string('short_code')->unique();
-            $table->string('custom_alias')->nullable();
             $table->timestamp('expires_at')->nullable();
             $table->integer('clicks')->default(0);
             $table->timestamps();
             $table->softDeletes();  // Logical delete
+
+            $table->index('short_code');
         });
     }
 

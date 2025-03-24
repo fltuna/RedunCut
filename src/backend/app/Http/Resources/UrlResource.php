@@ -18,7 +18,6 @@ class UrlResource extends JsonResource
             'id' => $this->id,
             'original_url' => $this->original_url,
             'short_code' => $this->short_code,
-            'custom_alias' => $this->custom_alias,
             'short_url' => url("/s/{$this->short_code}"),
             'expires_at' => $this->expires_at,
             'clicks' => $this->clicks,
