@@ -20,4 +20,18 @@ abstract class Controller
             'message' => $message
         ], 500);
     }
+
+    public function return422(string $message = 'Unprocessable Content'): JsonResponse
+    {
+        return response()->json([
+            'message' => $message
+        ], 422);
+    }
+
+    public function return400(string $message = 'Bad Request'): JsonResponse
+    {
+        return response()->json([
+            'message' => $message,
+        ], 400);
+    }
 }

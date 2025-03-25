@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Resources\UrlResource;
+use Exception;
 use App\Models\Url;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Resources\UrlResource;
 use App\Http\Controllers\Controller;
-use Exception;
+use Illuminate\Validation\ValidationException;
 
 class UrlController extends Controller
 {
@@ -53,10 +54,14 @@ class UrlController extends Controller
                 'short_url' => url("/s/{$url->short_code}"),
                 'created_at' => $url->created_at
             ], 201);
+        } catch (ValidationException $e){
+            return response()->json([
+                'message' => $e->getMessage(),
+                'errors' => $e->errors(),
+            ], 422);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
@@ -66,12 +71,22 @@ class UrlController extends Controller
      */
     public function show(string $id)
     {
-        $url = Url::find($id);
+        try {
+            if(!ctype_digit($id))
+                return self::return400("ID is should be integer. Provided: {$id}");
 
-        if(!isset($url))
-            return self::return404();
 
-        return response()->json(new UrlResource($url));
+            $url = Url::find($id);
+
+            if(!isset($url))
+                return self::return404();
+
+            return response()->json(new UrlResource($url));
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -79,26 +94,37 @@ class UrlController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $url = Url::find($id);
+        try{
+            $url = Url::find($id);
 
-        if(!isset($url))
-            return self::return404();
+            if(!isset($url))
+                return self::return404();
 
 
-        $validated = $request->validate([
-            'original_url' => 'nullable|url',
-            'short_code' => 'nullable|alpha_dash'
-        ]);
+            $validated = $request->validate([
+                'original_url' => 'nullable|url',
+                'short_code' => 'nullable|alpha_dash'
+            ]);
 
-        $url->fill($validated);
+            $url->fill($validated);
 
-        if($url->save())
-        {
-            return response()->json(new UrlResource($url));
-        }
-        else
-        {
-            return self::return500('Failed to update');
+            if($url->save())
+            {
+                return response()->json(new UrlResource($url));
+            }
+            else
+            {
+                return self::return500('Failed to update');
+            }
+        } catch (ValidationException $e){
+            return response()->json([
+                'message' => $e->getMessage(),
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 500);
         }
     }
 
