@@ -21,9 +21,11 @@ class UrlController extends Controller
      */
     public function index()
     {
-        return response()->json([
-            'where' => 'api index',
-        ]);
+        $urls = Url::where('user_id', self::USER_ID_FOR_TEST_BEFORE_AUTH_IMPLEMENTED)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(15);
+
+        return response()->json($urls);
     }
 
     /**
