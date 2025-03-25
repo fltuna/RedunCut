@@ -133,7 +133,27 @@ class UrlController extends Controller
      */
     public function destroy(string $id)
     {
-        return response()->json([]);
+        try{
+            $url = Url::find($id);
+
+            if(!isset($url))
+                return self::return404();
+
+            if($url->delete())
+            {
+                return response()->json([
+                    'message' => 'Resource Deleted',
+                ]);
+            }
+            else
+            {
+                return self::return500('Failed to update');
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
 
