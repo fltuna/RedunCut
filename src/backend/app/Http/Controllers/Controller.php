@@ -34,4 +34,11 @@ abstract class Controller
             'message' => $message,
         ], 400);
     }
+
+    public function return410(string $message = 'Gone'): JsonResponse
+    {
+        return response()->json([
+            'message' => $message,
+        ], 410);
+    }
 }
