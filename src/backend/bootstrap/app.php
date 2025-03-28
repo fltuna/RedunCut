@@ -11,14 +11,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->statefulApi([
-            'localhost',
-            'localhost:8000',
-            'localhost:3000',
-            '127.0.0.1',
-            '127.0.0.1:8000',
-            '::1',
-        ]);
+        $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
