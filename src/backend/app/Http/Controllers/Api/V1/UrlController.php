@@ -14,15 +14,12 @@ use Illuminate\Validation\ValidationException;
 class UrlController extends Controller
 {
 
-    // This value is used for define user id while authentication feature is not implemented.
-    const USER_ID_FOR_TEST_BEFORE_AUTH_IMPLEMENTED = 1;
-
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $urls = Url::where('user_id', self::USER_ID_FOR_TEST_BEFORE_AUTH_IMPLEMENTED)
+        $urls = Url::where('user_id', $request->user()->id)
                     ->orderBy('created_at', 'desc')
                     ->paginate(15);
 
@@ -47,7 +44,7 @@ class UrlController extends Controller
 
             $url->short_code = $validated['short_code'] ?? $this->generateUniqueShortCode();
 
-            $url->user_id = self::USER_ID_FOR_TEST_BEFORE_AUTH_IMPLEMENTED;
+            $url->user_id = $request->user()->id;
             $url->save();
 
             return response()->json([
@@ -72,14 +69,11 @@ class UrlController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id): JsonResponse
+    public function show(Request $request, string $url_id): JsonResponse
     {
         try {
-            if(!ctype_digit($id))
-                return self::return400("ID is should be integer. Provided: {$id}");
-
-
-            $url = Url::find($id);
+            $url = Url::where('user_id', $request->user()->id)
+                        ->where('id', $url_id)->first();
 
             if(!isset($url))
                 return self::return404();
@@ -95,10 +89,11 @@ class UrlController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id): JsonResponse
+    public function update(Request $request, string $url_id): JsonResponse
     {
         try{
-            $url = Url::find($id);
+            $url = Url::where('user_id', $request->user()->id)
+                        ->where('id', $url_id)->first();
 
             if(!isset($url))
                 return self::return404();
@@ -134,10 +129,11 @@ class UrlController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): JsonResponse
+    public function destroy(Request $request, string $url_id): JsonResponse
     {
         try{
-            $url = Url::find($id);
+            $url = Url::where('user_id', $request->user()->id)
+                        ->where('id', $url_id)->first();
 
             if(!isset($url))
                 return self::return404();

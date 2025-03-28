@@ -13,9 +13,7 @@ return new class extends Migration
     {
         Schema::create('urls', function (Blueprint $table) {
             $table->id();
-            //$table->foreignId('user_id')->constrained("users", "id");
-            // define user_id as nullable while authentication feature is not implemented.
-            $table->foreignId('user_id')->nullable();
+            $table->foreignId('user_id')->constrained("users", "id");
             $table->string('original_url');
             $table->string('short_code')->unique();
             $table->timestamp('expires_at')->nullable();
