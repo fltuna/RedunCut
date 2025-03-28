@@ -1,4 +1,6 @@
 
+# Backend
+
 ## Public Endpoint
 
 GET: `/api/v1/redirect/{short_code}`
@@ -12,7 +14,7 @@ GET: `/api/v1/redirect/{short_code}`
 ```
 
 
-# Request schema
+## Request schema
 
 ## Create User
 
