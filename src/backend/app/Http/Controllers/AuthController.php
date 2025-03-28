@@ -35,7 +35,9 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($validated)) {
+        if (Auth::attempt($validated, true)) {
+            $request->session()->regenerate();
+
             return response()->json(['user' => Auth::user()]);
         }
 
@@ -48,7 +50,7 @@ class AuthController extends Controller
     {
         Auth::guard('web')->logout();
 
-        return response()->json(['message' => 'ログアウトしました']);
+        return response()->json(['message' => 'Logged out successfully']);
     }
 
     public function user(Request $request): JsonResponse
