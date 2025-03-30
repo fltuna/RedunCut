@@ -112,4 +112,16 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Registration Settings
+    |--------------------------------------------------------------------------
+    |
+    | This option controls if registration is enabled in the application.
+    | When disabled, the registration routes will return a 403 error.
+    |
+    */
+    'registration' => [
+        'enabled' => env('REGISTRATION_ENABLED', false),
+    ],
 ];

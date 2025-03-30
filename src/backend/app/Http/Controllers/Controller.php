@@ -41,4 +41,16 @@ abstract class Controller
             'message' => $message,
         ], 410);
     }
+
+    protected function return403(string $message = 'Forbidden'): JsonResponse
+    {
+        return response()->json([
+            'message' => $message,
+        ], 403);
+    }
+
+    protected function isRegistrationEnabled(): bool
+    {
+        return (bool) config('auth.registration.enabled', false);
+    }
 }
