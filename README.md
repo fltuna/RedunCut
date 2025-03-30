@@ -41,6 +41,11 @@ POST: `/api/v1/login`
 }
 ```
 
+## Logout
+
+POST: `/api/v1/logout`
+
+No body required.
 
 ## Create Shorten URL
 
