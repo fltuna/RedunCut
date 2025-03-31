@@ -24,6 +24,8 @@ services:
 
   proxy:
     image: nginx:alpine
+    ports:
+      - "5000:80"
     restart: unless-stopped
     volumes:
       - front-build-artifact:/var/www/html/frontend/
